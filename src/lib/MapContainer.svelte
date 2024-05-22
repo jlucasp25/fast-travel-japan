@@ -1,18 +1,19 @@
 <script>
-    import {LeafletMap, Polygon, Popup, TileLayer, Tooltip} from 'svelte-leafletjs';
-    import {cityDistrictStore} from "./stores.js";
-    import {convertPolygonObjectToLatLng} from "./utils.js";
+    import {LeafletMap, Marker, Polygon, Popup, TileLayer, Tooltip} from 'svelte-leafletjs';
+    import {cityDistrictStore, POIStore} from "./stores.js";
+    import {convertPointObjectToLatLng, convertPolygonObjectToLatLng} from "./utils.js";
     import L from 'leaflet';
 
     let mapAdapter;
     let cityDistrictConfiguration = null;
-    let currentCity = null;
+    let activePoints = [];
+
 
     const mapOptions = {
         center: [35.652832, 139.839478],
         zoom: 11,
     };
-    const DEFAULT_TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const DEFAULT_TILE_URL = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png";
     const DEFAULT_TILE_LAYER_OPTIONS = {
         minZoom: 0,
         maxZoom: 20,
@@ -33,8 +34,19 @@
         mapAdapter.getMap().fitBounds(poly);
     }
 
+    POIStore.subscribe((points) => {
+        activePoints = points;
+    });
+
 </script>
 <LeafletMap options={mapOptions} bind:this={mapAdapter}>
+    {#each activePoints as point}
+        <Marker latLng={convertPointObjectToLatLng(point.location)}>
+            <Popup>
+                <p>{point.name}</p>
+            </Popup>
+        </Marker>
+    {/each}
     <!-- City Poly -->
     {#if cityDistrictConfiguration.city && cityDistrictConfiguration.enableCityPoly}
         <Polygon latLngs={convertPolygonObjectToLatLng(cityDistrictConfiguration.city.polygon)} color="green"

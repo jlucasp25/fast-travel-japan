@@ -6,3 +6,7 @@
 export const convertPolygonObjectToLatLng = (poly) => {
     return poly.map((p) => [p.lat, p.lng]);
 }
+
+export const convertPointObjectToLatLng = (point) => {
+    return [point.lat, point.lng];
+}
