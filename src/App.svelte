@@ -9,8 +9,8 @@
     };
 
 </script>
-<aside class="h-screen w-[20vw] bg-white">
-    <MapController cities={availableMainCities}/>
+<aside class="h-screen w-[20vw] bg-gray-100">
+    <MapController/>
 </aside>
 <main class="h-screen w-[80vw] bg-amber-200">
     <MapContainer cities={availableMainCities}/>
