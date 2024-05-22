@@ -1,8 +1,12 @@
 <script>
     import {LeafletMap, Polygon, Popup, TileLayer, Tooltip} from 'svelte-leafletjs';
-    import {cityStore} from "./stores.js";
+    import {cityDistrictStore} from "./stores.js";
+    import {convertPolygonObjectToLatLng} from "./utils.js";
+    import L from 'leaflet';
 
-    export let cities = {};
+    let mapAdapter;
+    let cityDistrictConfiguration = null;
+    let currentCity = null;
 
     const mapOptions = {
         center: [35.652832, 139.839478],
@@ -13,30 +17,37 @@
         minZoom: 0,
         maxZoom: 20,
         maxNativeZoom: 19,
-        attribution: "© OpenStreetMap contributors",
+        attribution: "© OpenStreetMap / João Lucas Pires",
     };
 
-    let shibuyaPolygon = [
-        {lat: 35.664418, lng: 139.698567},
-        {lat: 35.664940, lng: 139.707834},
-        {lat: 35.660474, lng: 139.712246},
-        {lat: 35.654496, lng: 139.711001},
-        {lat: 35.650980, lng: 139.705410},
-        {lat: 35.652154, lng: 139.696759},
-        {lat: 35.658328, lng: 139.691645},
-        {lat: 35.664418, lng: 139.698567}
-    ].map(el => [el.lat, el.lng]);
-
-    cityStore.subscribe((city) => {
-        let selectedCity = cities[city];
-        mapOptions['center'] = [selectedCity['lat'], selectedCity['lng']];
+    cityDistrictStore.subscribe((cityDistrict) => {
+        cityDistrictConfiguration = cityDistrict;
+        if (cityDistrictConfiguration.city) {
+            console.log("should fly")
+            flyToCity(cityDistrictConfiguration.city);
+        }
     });
 
+    const flyToCity = (city) => {
+        let poly = L.latLngBounds(convertPolygonObjectToLatLng(city.polygon))
+        mapAdapter.getMap().fitBounds(poly);
+    }
+
 </script>
-<LeafletMap options={mapOptions}>
-    <Polygon latLngs={shibuyaPolygon} color="#ff0000" fillColor="#ff0000">
-        <Popup>Shibuya</Popup>
-        <Tooltip>Shibuya</Tooltip>
-    </Polygon>
+<LeafletMap options={mapOptions} bind:this={mapAdapter}>
+    <!-- City Poly -->
+    {#if cityDistrictConfiguration.city && cityDistrictConfiguration.enableCityPoly}
+        <Polygon latLngs={convertPolygonObjectToLatLng(cityDistrictConfiguration.city.polygon)} color="green"
+                 fillColor="green">
+            <Tooltip>{cityDistrictConfiguration.city.name}</Tooltip>
+        </Polygon>
+    {/if}
+    <!-- District Poly -->
+    {#if cityDistrictConfiguration.district && cityDistrictConfiguration.enableDistrictPoly}
+        <Polygon latLngs={convertPolygonObjectToLatLng(cityDistrictConfiguration.district.polygon)} color="red"
+                 fillColor="red">
+            <Tooltip>{cityDistrictConfiguration.district.name}</Tooltip>
+        </Polygon>
+    {/if}
     <TileLayer url={DEFAULT_TILE_URL} options={DEFAULT_TILE_LAYER_OPTIONS}/>
 </LeafletMap>

@@ -1,3 +1,8 @@
-import { writable } from 'svelte/store';
+import {writable} from 'svelte/store';
 
-export const cityStore = writable('Tokyo');
+export const cityDistrictStore = writable({
+    city: null,
+    district: null,
+    enableCityPoly: false,
+    enableDistrictPoly: false,
+});

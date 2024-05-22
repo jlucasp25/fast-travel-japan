@@ -1,6 +1,6 @@
 <script>
     import MapContainer from "./lib/MapContainer.svelte";
-    import MapController from "./lib/MapController.svelte";
+    import CityAreaController from "./lib/CityDistrictController.svelte";
 
     const availableMainCities = {
         'Osaka': {lat: 34.6937, lng: 135.5023},
@@ -10,8 +10,8 @@
 
 </script>
 <aside class="h-screen w-[20vw] bg-gray-100">
-    <MapController/>
+    <CityAreaController/>
 </aside>
 <main class="h-screen w-[80vw] bg-amber-200">
-    <MapContainer cities={availableMainCities}/>
+    <MapContainer/>
 </main>
