@@ -1,17 +1,23 @@
 <script>
     import {onMount} from "svelte";
-    import {POIStore} from "./stores.js";
+    import {POIStore, cityDistrictStore} from "./stores.js";
+
     const baseURL = 'http://localhost:8090';
 
     let points = [];
     let whichFilter = 'ALL';
+    let selectedCityDistrict = null;
+
+    cityDistrictStore.subscribe(value => {
+        selectedCityDistrict = value;
+    });
 
     const fetchPOIs = async () => {
         const url = `${baseURL}/api/collections/point_of_interest/records`;
         const response = await fetch(url);
         const data = await response.json();
         points = data["items"];
-        points = points.map(point => ({...point, enabled: false}))
+        points = points.map(point => ({...point, enabled: false}));
     }
 
     $: {
@@ -21,15 +27,19 @@
 
     $: {
         whichFilter;
-        filterPointsByWhich()
+        selectedCityDistrict;
+        filterPoints()
     }
 
-    const filterPointsByWhich = async () => {
+    const filterPoints = async () => {
         await fetchPOIs();
-        if (whichFilter === 'ALL') {
-            return;
+        if (selectedCityDistrict.city) {
+            points = points.filter(point => point.city === selectedCityDistrict.city.id);
         }
-        points = points.filter(point => point.which === whichFilter);
+        if (whichFilter !== 'ALL') {
+            points = points.filter(point => point.which === whichFilter);
+        }
+
     }
 
     onMount(async () => {
@@ -38,7 +48,12 @@
 
 </script>
 <div class="card p-3 m-2 bg-white shadow-lg">
-    <h1 class="text-gray-700 text-md">Points Of Interest</h1>
+    <div class="flex flex-row items-center justify-between">
+        <h1 class="text-gray-700 text-md">Points Of Interest</h1>
+        {#if selectedCityDistrict.city}
+            <div class="badge badge-neutral text-white">{selectedCityDistrict.city?.name}</div>
+        {/if}
+    </div>
     <hr class="bg-gray-200 my-3">
     <h2 class="text-gray-700 text-sm">Filters</h2>
     <div class="flex flex-row items-center p-1 justify-around flex-shrink-0 flex-grow w-full">
