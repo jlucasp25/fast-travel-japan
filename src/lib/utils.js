@@ -10,3 +10,18 @@ export const convertPolygonObjectToLatLng = (poly) => {
 export const convertPointObjectToLatLng = (point) => {
     return [point.lat, point.lng];
 }
+
+/**
+ * Useful for sorting points by latitude and longitude
+ * @param points
+ * @returns {*}
+ */
+export const sortPointsByLatLng = (points) => {
+    points.sort((a, b) => {
+        if (a.lat === b.lat) {
+            return a.lng - b.lng;
+        }
+        return a.lat - b.lat;
+    });
+    return points;
+}

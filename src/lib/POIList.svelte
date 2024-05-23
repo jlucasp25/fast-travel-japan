@@ -74,23 +74,25 @@
         </div>
     </div>
     <hr class="bg-gray-200 my-3">
-    {#each points as point}
-        <div class="rounded-lg p-1 bg-gray-100 border border-gray-200 flex items-center justify-between gap-2 mb-2">
-            <div class="flex flex-row items-center">
-                <div class="form-control">
-                    <label class="label cursor-pointer">
-                        <input type="checkbox" class="checkbox bg-white checkbox-primary"
-                               bind:checked={point.enabled}
-                        />
-                    </label>
+    <div class="flex flex-col overflow-y-auto h-[400px]">
+        {#each points as point}
+            <div class="rounded-lg p-1 bg-gray-100 border border-gray-200 flex items-center justify-between gap-2 mb-2">
+                <div class="flex flex-row items-center">
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <input type="checkbox" class="checkbox bg-white checkbox-primary"
+                                   bind:checked={point.enabled}
+                            />
+                        </label>
+                    </div>
+                    <span class="text-gray-700">{point.name}</span>
                 </div>
-                <span class="text-gray-700">{point.name}</span>
+                {#if point.which === 'UFI'}
+                    <div class="badge bg-rose-300 text-rose-700 border-0 px-2">Ufi</div>
+                {:else}
+                    <div class="badge bg-cyan-300 text-cyan-700 border-0 px-2">Uca</div>
+                {/if}
             </div>
-            {#if point.which === 'UFI'}
-                <div class="badge bg-rose-300 text-rose-700 border-0 px-2">Ufi</div>
-            {:else}
-                <div class="badge bg-cyan-300 text-cyan-700 border-0 px-2">Uca</div>
-            {/if}
-        </div>
-    {/each}
+        {/each}
+    </div>
 </div>
