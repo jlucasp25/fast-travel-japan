@@ -5,3 +5,5 @@ export const cityDistrictStore = writable({
 });
 
 export const POIStore = writable([]);
+
+export const activeRouteStore = writable(null);

@@ -1,12 +1,18 @@
 <script>
     import {onMount} from "svelte";
-    import {POIStore, cityDistrictStore} from "./stores.js";
+    import {POIStore, cityDistrictStore, activeRouteStore} from "./stores.js";
+    import {DIRECTIONS_KEY} from "./keys.js";
 
     const baseURL = 'http://localhost:8090';
 
     let points = [];
     let whichFilter = 'ALL';
     let selectedCityDistrict = null;
+
+    let myLocation = {
+        "lat": 35.658581,
+        "lng": 139.745438
+    };
 
     cityDistrictStore.subscribe(value => {
         selectedCityDistrict = value;
@@ -42,12 +48,26 @@
 
     }
 
+    const getDirections = async () => {
+        // &mode=transit => Subway
+        // &mode=walking => Walking
+        const origin = `${myLocation.lat},${myLocation.lng}`;
+        const destination = '35.710062,139.8107';
+        const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=subway&key=${DIRECTIONS_KEY}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const routes = data.routes;
+        console.log()
+        activeRouteStore.set(routes);
+    }
+
     onMount(async () => {
         await fetchPOIs();
     })
 
 </script>
 <div class="card p-3 m-2 bg-white shadow-lg">
+    <button class="btn btn-accent" on:click={getDirections}>TEST DIRECTIONS</button>
     <div class="flex flex-row items-center justify-between">
         <h1 class="text-gray-700 text-md">Points Of Interest</h1>
         {#if selectedCityDistrict.city}

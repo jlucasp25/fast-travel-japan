@@ -56,9 +56,9 @@
     }
 
 </script>
-<button class="btn btn-warning absolute top-0 right-0 mr-5 mt-5 z-[999]" on:click={generateSelectedPointsPoly}>Points
-    Poly
-</button>
+<!--<button class="btn btn-warning absolute top-0 right-0 mr-5 mt-5 z-[999]" on:click={generateSelectedPointsPoly}>Points-->
+<!--    Poly-->
+<!--</button>-->
 <LeafletMap options={mapOptions} bind:this={mapAdapter}>
     {#each activePoints as point}
         <Marker latLng={convertPointObjectToLatLng(point.location)}>

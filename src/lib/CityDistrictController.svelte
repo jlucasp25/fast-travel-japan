@@ -40,7 +40,7 @@
         await fetchDistricts();
     });
 </script>
-<div class="card p-3 m-2 bg-white shadow-lg">
+<div class="card p-3 mt-2 bg-white shadow-lg">
     <div class="flex flex-col">
         <label for="city-select" class="text-gray-700 mb-2">City</label>
         <select class="select select-bordered bg-white text-gray-600" bind:value={selectedCity}
