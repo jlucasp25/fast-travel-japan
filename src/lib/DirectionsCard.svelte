@@ -10,7 +10,7 @@
         }
     });
 </script>
-<section class="absolute bottom-0 mb-2 mx-2 w-full z-[999]">
+<section class="absolute bottom-0 right-0 mb-2 mx-2 w-[30vw] z-[999]">
     <div class="stack w-full">
         <div class="card shadow-md bg-white text-primary-content h-[150px] overflow-y-auto">
             <div class="card-body">
